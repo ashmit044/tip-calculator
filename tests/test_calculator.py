@@ -27,3 +27,17 @@ def test_invalid_input_exceptions():
 
     with pytest.raises(ValueError):
         calculate_tip_and_split(bill_amount=100.0, num_people=0)
+
+
+def test_currency_values_are_rounded_before_split():
+    result = calculate_tip_and_split(10.005, tip_percentage=10, num_people=3)
+
+    assert result["original_bill"] == 10.01
+    assert result["tip_amount"] == 1.0
+    assert result["total_bill"] == 11.01
+    assert result["per_person_total"] == 3.67
+
+
+def test_rejects_non_finite_currency_values():
+    with pytest.raises(ValueError, match="finite"):
+        calculate_tip_and_split(float("nan"))
