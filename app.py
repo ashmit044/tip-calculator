@@ -33,6 +33,9 @@ def run_cli():
         print(f"Tip ({res['tip_percentage']}%): ${res['tip_amount']:.2f}")
         print(f"Total Bill: ${res['total_bill']:.2f}")
         print(f"\n👉 Per Person ({res['num_people']} people): ${res['per_person_total']:.2f}")
+        print("Individual shares (adjusted to sum exactly):")
+        for index, share in enumerate(res["per_person_shares"], start=1):
+            print(f"  Person {index}: ${share:.2f}")
     except ValueError as err:
         print(f"Error: {err}")
 
@@ -71,6 +74,7 @@ def run_streamlit():
         st.write(f"• **Tax ({res['tax_percentage']}%):** ${res['tax_amount']:.2f}")
         st.write(f"• **Tip ({res['tip_percentage']}%):** ${res['tip_amount']:.2f}")
         st.write(f"• **Each Person Pays ({res['num_people']} people):** **${res['per_person_total']:.2f}** (${res['per_person_subtotal']:.2f} subtotal + ${res['per_person_tip']:.2f} tip)")
+        st.write("**Exact individual shares:** " + ", ".join(f"${share:.2f}" for share in res["per_person_shares"]))
 
 
 if __name__ == "__main__":

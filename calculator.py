@@ -52,6 +52,12 @@ def calculate_tip_and_split(
     per_person_total = (total_bill / num_people).quantize(_CENT, rounding=ROUND_HALF_UP)
     per_person_tip = (tip_amount / num_people).quantize(_CENT, rounding=ROUND_HALF_UP)
     per_person_subtotal = (subtotal / num_people).quantize(_CENT, rounding=ROUND_HALF_UP)
+    total_cents = int(total_bill * 100)
+    base_share, extra_cent_shares = divmod(total_cents, num_people)
+    per_person_shares = [
+        float(Decimal(base_share + (index < extra_cent_shares)) / 100)
+        for index in range(num_people)
+    ]
 
     return {
         "original_bill": float(bill),
@@ -65,4 +71,5 @@ def calculate_tip_and_split(
         "per_person_total": float(per_person_total),
         "per_person_tip": float(per_person_tip),
         "per_person_subtotal": float(per_person_subtotal),
+        "per_person_shares": per_person_shares,
     }

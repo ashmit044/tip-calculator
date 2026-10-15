@@ -38,6 +38,13 @@ def test_currency_values_are_rounded_before_split():
     assert result["per_person_total"] == 3.67
 
 
+def test_individual_shares_reconcile_to_total_when_split_has_remainder():
+    result = calculate_tip_and_split(10.00, tip_percentage=0, num_people=3)
+
+    assert result["per_person_shares"] == [3.34, 3.33, 3.33]
+    assert round(sum(result["per_person_shares"]), 2) == result["total_bill"]
+
+
 def test_rejects_non_finite_currency_values():
     with pytest.raises(ValueError, match="finite"):
         calculate_tip_and_split(float("nan"))
