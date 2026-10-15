@@ -39,8 +39,12 @@ def calculate_tip_and_split(
         raise ValueError("Tip percentage cannot be negative.")
     if tax_rate < 0:
         raise ValueError("Tax percentage cannot be negative.")
-    if num_people <= 0:
-        raise ValueError("Number of people must be at least 1.")
+    if (
+        isinstance(num_people, bool)
+        or not isinstance(num_people, int)
+        or num_people <= 0
+    ):
+        raise ValueError("Number of people must be a positive whole number.")
 
     # Compute individual monetary components
     tax_amount = (bill * tax_rate / 100).quantize(_CENT, rounding=ROUND_HALF_UP)

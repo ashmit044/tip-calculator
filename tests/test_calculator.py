@@ -48,3 +48,9 @@ def test_individual_shares_reconcile_to_total_when_split_has_remainder():
 def test_rejects_non_finite_currency_values():
     with pytest.raises(ValueError, match="finite"):
         calculate_tip_and_split(float("nan"))
+
+
+@pytest.mark.parametrize("num_people", [2.5, True, "3"])
+def test_rejects_non_integer_headcounts(num_people):
+    with pytest.raises(ValueError, match="positive whole number"):
+        calculate_tip_and_split(30, num_people=num_people)
