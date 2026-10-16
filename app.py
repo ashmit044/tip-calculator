@@ -66,15 +66,16 @@ def run_streamlit():
         m1, m2, m3 = st.columns(3)
         m1.metric("Total Bill", f"${res['total_bill']:.2f}")
         m2.metric("Total Tip", f"${res['tip_amount']:.2f}")
-        m3.metric("Per Person Share", f"${res['per_person_total']:.2f}")
+        m3.metric("Average Share", f"${res['per_person_total']:.2f}")
 
         st.markdown("---")
         st.subheader("📋 Itemized Breakdown")
         st.write(f"• **Original Subtotal:** ${res['original_bill']:.2f}")
         st.write(f"• **Tax ({res['tax_percentage']}%):** ${res['tax_amount']:.2f}")
         st.write(f"• **Tip ({res['tip_percentage']}%):** ${res['tip_amount']:.2f}")
-        st.write(f"• **Each Person Pays ({res['num_people']} people):** **${res['per_person_total']:.2f}** (${res['per_person_subtotal']:.2f} subtotal + ${res['per_person_tip']:.2f} tip)")
-        st.write("**Exact individual shares:** " + ", ".join(f"${share:.2f}" for share in res["per_person_shares"]))
+        st.write(f"• **Average per person ({res['num_people']} people):** ${res['per_person_total']:.2f}")
+        st.caption("Individual shares may differ by one cent to make the split add up exactly.")
+        st.write("**Individual shares:** " + ", ".join(f"${share:.2f}" for share in res["per_person_shares"]))
 
 
 if __name__ == "__main__":
