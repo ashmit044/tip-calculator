@@ -2,7 +2,6 @@
 
 import sys
 import argparse
-import streamlit as st
 from calculator import calculate_tip_and_split
 
 
@@ -16,23 +15,28 @@ def run_cli():
 
     args = parser.parse_args()
 
-    if args.bill is not None:
-        bill_amount, tip_pct, tax_pct, people = args.bill, args.tip, args.tax, args.people
-    else:
-        print("--- 💵 Tip & Bill Splitter Calculator CLI ---")
-        bill_amount = float(input("Enter bill amount ($): "))
-        tip_pct = float(input("Enter tip percentage (%): ") or "15")
-        tax_pct = float(input("Enter tax percentage (%): ") or "0")
-        people = int(input("Enter number of people splitting: ") or "1")
-
     try:
+        if args.bill is not None:
+            bill_amount, tip_pct, tax_pct, people = (
+                args.bill,
+                args.tip,
+                args.tax,
+                args.people,
+            )
+        else:
+            print("--- Tip & Bill Splitter Calculator CLI ---")
+            bill_amount = float(input("Enter bill amount ($): "))
+            tip_pct = float(input("Enter tip percentage (%): ") or "15")
+            tax_pct = float(input("Enter tax percentage (%): ") or "0")
+            people = int(input("Enter number of people splitting: ") or "1")
+
         res = calculate_tip_and_split(bill_amount, tip_pct, tax_pct, people)
         print("\n--- Summary Breakdown ---")
         print(f"Original Bill: ${res['original_bill']:.2f}")
         print(f"Tax ({res['tax_percentage']}%): ${res['tax_amount']:.2f}")
         print(f"Tip ({res['tip_percentage']}%): ${res['tip_amount']:.2f}")
         print(f"Total Bill: ${res['total_bill']:.2f}")
-        print(f"\n👉 Per Person ({res['num_people']} people): ${res['per_person_total']:.2f}")
+        print(f"\nPer Person ({res['num_people']} people): ${res['per_person_total']:.2f}")
         print("Individual shares (adjusted to sum exactly):")
         for index, share in enumerate(res["per_person_shares"], start=1):
             print(f"  Person {index}: ${share:.2f}")
@@ -42,6 +46,8 @@ def run_cli():
 
 def run_streamlit():
     """Streamlit Web Dashboard interface."""
+    import streamlit as st
+
     st.set_page_config(page_title="Smart Tip & Bill Splitter", page_icon="💵", layout="centered")
 
     st.title("💵 Smart Tip & Bill Splitter")
@@ -79,7 +85,7 @@ def run_streamlit():
 
 
 if __name__ == "__main__":
-    if "streamlit" in sys.modules or (len(sys.argv) > 1 and sys.argv[1].endswith(".py")):
+    if "streamlit" in sys.modules:
         run_streamlit()
     else:
         run_cli()
